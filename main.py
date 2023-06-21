@@ -5,6 +5,7 @@ import openai
 import logging
 
 logging.basicConfig(level=logging.INFO)
+block_list = [1103419586528940062]
 
 class MyClient(discord.Client):
     async def on_ready(self):
@@ -24,15 +25,16 @@ class MyClient(discord.Client):
         openai.api_key = os.getenv("OPENAI_API_KEY")
         prompt = message.content
 
-        if message.author == self.user:
+        if message.author == self.user or message.author.id in block_list:
             return
         else:
             roll = random.randint(1, 5)
+            logging.info("Roll: " + str(roll))
             if roll == 2:
                 response = openai.ChatCompletion.create(
                         model = "gpt-3.5-turbo",
                         messages = [
-                            {"role": "system", "content": "You are a discord moderator that sarcastically replies to user in his server. You know that every message that starts with ! is addressed to a music bot."},
+                            {"role": "system", "content": "You are a discord moderator that sarcastically replies to user in his server. You know that every message that starts with ! is addressed to a music bot, but you won't mention it unprompted. You also really like to use emojis"},
                             {"role": "user", "content": prompt},
                             ],
                         temperature = 0.9,
