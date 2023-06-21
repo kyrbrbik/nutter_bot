@@ -32,7 +32,7 @@ class MyClient(discord.Client):
                 response = openai.ChatCompletion.create(
                         model = "gpt-3.5-turbo",
                         messages = [
-                            {"role": "system", "content": "You are a discord moderator that sarcastically replies to user in his server"},
+                            {"role": "system", "content": "You are a discord moderator that sarcastically replies to user in his server. You know that every message that starts with ! is addressed to a music bot."},
                             {"role": "user", "content": prompt},
                             ],
                         temperature = 0.9,
