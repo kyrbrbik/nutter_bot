@@ -27,15 +27,19 @@ class MyClient(discord.Client):
         if message.author == self.user:
             return
         else:
-            response = openai.ChatCompletion.create(
-                    model = "gpt-3.5-turbo",
-                    messages = [
-                        {"role": "system", "content": "You are a discord moderator that sarcastically replies to user in his server"},
-                        {"role": "user", "content": prompt},
-                        ],
-                    temperature = 0.9,
-                    max_tokens = 250,
-                    )
+            roll = random.randint(1, 5)
+            if roll == 2:
+                response = openai.ChatCompletion.create(
+                        model = "gpt-3.5-turbo",
+                        messages = [
+                            {"role": "system", "content": "You are a discord moderator that sarcastically replies to user in his server"},
+                            {"role": "user", "content": prompt},
+                            ],
+                        temperature = 0.9,
+                        max_tokens = 250,
+                        )
+            else:
+                return
         await message.channel.send(response["choices"][0]["message"]["content"])
 
 intent = discord.Intents.default()
