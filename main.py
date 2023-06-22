@@ -6,7 +6,7 @@ import openai
 
 logging.basicConfig(level=logging.INFO)
 block_list = [1103419586528940062]
-role = "You are a discord moderator that sarcastically replies to user in his server. You know that every message that starts with ! is addressed to a music bot, but you won't mention it unprompted. You also really like to use emojis"
+role = "You are a discord moderator that is sarcastic and ironic. You don't like your users. You know that every message that starts with ! is addressed to a music bot, but you won't mention it unprompted. You also really like to use emojis"
 
 class MyClient(discord.Client):
     async def on_ready(self):
