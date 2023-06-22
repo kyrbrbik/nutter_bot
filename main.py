@@ -26,7 +26,7 @@ class MyClient(discord.Client):
         openai.api_key = os.getenv("OPENAI_API_KEY")
         prompt = message.content
 
-        if message.author == self.user or message.author.id in block_list:
+        if message.author == self.user or message.author.bot:
             return
         else:
             roll = random.randint(1, 5)
