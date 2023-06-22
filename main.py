@@ -1,11 +1,12 @@
 import os
 import random
 import discord
-import openai
 import logging
+import openai
 
 logging.basicConfig(level=logging.INFO)
 block_list = [1103419586528940062]
+role = "You are a discord moderator that sarcastically replies to user in his server. You know that every message that starts with ! is addressed to a music bot, but you won't mention it unprompted. You also really like to use emojis"
 
 class MyClient(discord.Client):
     async def on_ready(self):
@@ -34,7 +35,7 @@ class MyClient(discord.Client):
                 response = openai.ChatCompletion.create(
                         model = "gpt-3.5-turbo",
                         messages = [
-                            {"role": "system", "content": "You are a discord moderator that sarcastically replies to user in his server. You know that every message that starts with ! is addressed to a music bot, but you won't mention it unprompted. You also really like to use emojis"},
+                            {"role": "system", "content": role},
                             {"role": "user", "content": prompt},
                             ],
                         temperature = 0.9,
