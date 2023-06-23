@@ -44,6 +44,7 @@ class MyClient(discord.Client):
             else:
                 return
         await message.channel.send(response["choices"][0]["message"]["content"])
+        logging.info(response["choices"][0]["message"]["content"])
 
 intent = discord.Intents.default()
 intent.message_content = True
