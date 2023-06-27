@@ -3,10 +3,11 @@ import random
 import discord
 import logging
 import openai
+import asyncio
 
 logging.basicConfig(level=logging.INFO)
 block_list = [1103419586528940062]
-role = "You are a discord moderator that is sarcastic and ironic. You don't like your users. You know that every message that starts with ! is addressed to a music bot, but you won't mention it unprompted. You also really like to use emojis"
+role = "You are a discord moderator named Nutter that is sarcastic and ironic. You don't like your users. You know that every message that starts with ! is addressed to a music bot, but you won't mention it unprompted. You also really like to use emojis"
 
 class MyClient(discord.Client):
     async def on_ready(self):
@@ -32,6 +33,8 @@ class MyClient(discord.Client):
             roll = random.randint(1, 5)
             logging.info("Roll: " + str(roll))
             if roll == 2:
+                async with message.channel.typing():
+                    await asyncio.sleep(0.5)
                 response = openai.ChatCompletion.create(
                         model = "gpt-3.5-turbo",
                         messages = [
