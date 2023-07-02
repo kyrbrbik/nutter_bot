@@ -26,22 +26,29 @@ class MyClient(discord.Client):
     async def on_message(self, message):
         global is_waiting
         if is_waiting == True:
+            logging.info("Already waiting for response")
             return
         else:
             prompt = message.content
             if message.author == self.user or message.author.bot:
+                logging.info("Message from self or bot")
                 return
             else:
-                if dice_roll() == 2:
-                    respone = api_call(prompt)
+                roll = self.dice_roll()
+                logging.info(roll)
+                if roll == 2:
+                    response = self.api_call(prompt)
+                    logging.info(response["choices"][0]["message"]["content"])
                     await message.channel.send(response["choices"][0]["message"]["content"])
                 else:
                     return
     def api_call(self, prompt):
         global is_waiting
         is_waiting = True
+        prompt = prompt
+        logging.info(prompt)
         openai.api_key = os.getenv("OPENAI_API_KEY")
-        response = openai.Completion.create(
+        response = openai.ChatCompletion.create(
             model = "gpt-3.5-turbo",
             messages = [
                 {"role": "system", "content": role},
@@ -53,7 +60,7 @@ class MyClient(discord.Client):
         is_waiting = False
         return response
     def dice_roll(self):
-        roll = random.randint(1, 5)
+        roll = random.randint(1, 2)
         return roll
 
 
