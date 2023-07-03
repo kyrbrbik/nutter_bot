@@ -11,8 +11,6 @@ role = "You are a discord moderator named Nutter that is sarcastic and ironic. Y
 is_waiting = False
 
 class MyClient(discord.Client):
-    async def on_ready(self):
-        print('Logged on as', self.user)
 
     async def on_message(self, message):
         if message.author == self.user:
@@ -66,7 +64,16 @@ class MyClient(discord.Client):
 
 intent = discord.Intents.default()
 intent.message_content = True
+intent.guilds = True
 token = os.getenv("DISCORD_TOKEN")
 
 client = MyClient(intents=intent)
+
+@client.event
+async def on_ready():
+    logging.info("Logged in as {0.user}".format(client))
+    guilds = client.guilds
+    for guild in guilds:
+        logging.info(guild.name)
+
 client.run(token)
