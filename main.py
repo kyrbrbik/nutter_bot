@@ -28,7 +28,7 @@ class MyClient(discord.Client):
             return
         else:
             prompt = message.content
-            if message.author == self.user or message.author.bot:
+            if message.author == self.user or message.author.bot or message.content.startswith("!"):
                 logging.info("Message from self or bot")
                 return
             else:
