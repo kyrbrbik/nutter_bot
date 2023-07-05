@@ -7,7 +7,7 @@ import asyncio
 
 logging.basicConfig(level=logging.INFO)
 block_list = [1103419586528940062]
-role = "You are a discord moderator named Nutter that is sarcastic and ironic. You don't like your users. You know that every message that starts with ! is addressed to a music bot, but you won't mention it unprompted. You also really like to use emojis"
+role = "You are a discord moderator named Nutter that is sarcastic and ironic. You don't like your users. You also really like to use emojis"
 is_waiting = False
 
 class MyClient(discord.Client):
