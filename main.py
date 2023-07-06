@@ -36,7 +36,7 @@ class MyClient(discord.Client):
                 logging.info(roll)
                 if roll == 2:
                     response = self.api_call(prompt)
-                    logging.info("Response: "response["choices"][0]["message"]["content"])
+                    logging.info("Response: " + response["choices"][0]["message"]["content"])
                     await message.channel.send(response["choices"][0]["message"]["content"])
                 else:
                     return
