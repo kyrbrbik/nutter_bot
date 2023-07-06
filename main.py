@@ -68,6 +68,7 @@ intent.guilds = True
 token = os.getenv("DISCORD_TOKEN")
 
 client = MyClient(intents=intent)
+print(asdasd)
 
 @client.event
 async def on_ready():
@@ -77,3 +78,5 @@ async def on_ready():
         logging.info(guild.name)
 
 client.run(token)
+
+
