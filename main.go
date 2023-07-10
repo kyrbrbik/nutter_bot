@@ -86,10 +86,7 @@ func main() {
 }
 
 func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate) {
-	if message.Author.ID == session.State.User.ID {
-		return
-	}
-	if message.Author.Bot {
+	if message.Author.ID == session.State.User.ID || message.Author.Bot {
 		return
 	}
 	if dice_roll() == 1 {
