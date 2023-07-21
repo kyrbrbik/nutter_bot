@@ -5,8 +5,8 @@ RUN go mod download
 COPY main.go .
 RUN go build -o main .
 
-FROM debian:11-slim
-RUN apt update && apt install ca-certificates -y
+FROM cgr.dev/chainguard/wolfi-base:latest
+RUN apk add --no-cache ca-certificates
 WORKDIR /app
 COPY --from=builder /app/main .
 CMD ["/app/main"]
