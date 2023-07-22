@@ -1,7 +1,13 @@
-from debian:11-slim
-COPY requirements.txt /tmp/requirements.txt
-RUN apt-get update && apt-get --no-install-recommends install -y python3 python3-pip 
-RUN pip3 install -r /tmp/requirements.txt
-COPY main.py /app/main.py
+FROM golang:1.20.5-alpine AS builder
 WORKDIR /app
-CMD ["python3", "main.py"]
+COPY go.mod go.sum ./
+RUN go mod download
+COPY main.go .
+RUN go build -o main .
+
+FROM cgr.dev/chainguard/wolfi-base:latest
+RUN apk add --no-cache ca-certificates
+WORKDIR /app
+COPY --from=builder /app/main .
+CMD ["/app/main"]
+
