@@ -79,6 +79,7 @@ func main() {
 		fmt.Println("error opening connection,", err)
 		return
 	}
+	log.Println("Bot started successfully.")
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, os.Interrupt, syscall.SIGTERM, syscall.SIGINT, syscall.SIGKILL, syscall.SIGQUIT)
 	<-sc
