@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 	"log"
+	"strings"
 
 	openai "github.com/sashabaranov/go-openai"
 	"github.com/bwmarrin/discordgo"
@@ -87,6 +88,9 @@ func main() {
 
 func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate) {
 	if message.Author.ID == session.State.User.ID || message.Author.Bot {
+		return
+	}
+	if strings.HasPrefix(message.Content, "!") {
 		return
 	}
 	if dice_roll() == 1 {
