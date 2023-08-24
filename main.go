@@ -1,17 +1,17 @@
 package main
 
 import (
-	"math/rand"
-	"fmt"
 	"context"
+	"fmt"
+	"log"
+	"math/rand"
 	"os"
 	"os/signal"
-	"syscall"
-	"log"
 	"strings"
+	"syscall"
 
-	openai "github.com/sashabaranov/go-openai"
 	"github.com/bwmarrin/discordgo"
+	openai "github.com/sashabaranov/go-openai"
 )
 
 var (
@@ -38,12 +38,12 @@ func api_call(prompt string) string {
 		openai.ChatCompletionRequest{
 			Model: openai.GPT3Dot5Turbo,
 			Messages: []openai.ChatCompletionMessage{
-				{ 
-					Role: openai.ChatMessageRoleSystem,
+				{
+					Role:    openai.ChatMessageRoleSystem,
 					Content: role,
 				},
 				{
-					Role: openai.ChatMessageRoleUser,
+					Role:    openai.ChatMessageRoleUser,
 					Content: prompt,
 				},
 			},
