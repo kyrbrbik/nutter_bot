@@ -19,14 +19,12 @@ jobs:
         with:
           gofmt-path: "."
           gofmt-flags: "-l -d"
-        continue-on-error: true
-      - name: check failure
-        if: ${{ failure() }}
-        run: exit 1
+
   fmt-fix:
     name: gofmt fix
     runs-on: ubuntu-latest
-    if: job.golang-fmt.outcome == 1
+    needs: golang-fmt
+    if: ${{ failure() }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
