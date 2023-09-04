@@ -15,7 +15,7 @@ import (
 )
 
 var (
-		is_waiting bool = false
+	is_waiting bool = false
 )
 
 func init() {
