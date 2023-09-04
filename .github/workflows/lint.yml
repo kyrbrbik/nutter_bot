@@ -24,6 +24,7 @@ jobs:
         if: ${{ failure() }}
         env:
           FAIL: ${{ job.status }}
+        run: exit 1
   fmt-fix:
     name: gofmt fix
     runs-on: ubuntu-latest
