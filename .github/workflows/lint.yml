@@ -1,0 +1,42 @@
+name: golang-fmt
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  golang-fmt:
+    name: gofmt
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: gofmt
+        uses: Jerome1337/gofmt-action@v1.0.5
+        with:
+          gofmt-path: "."
+          gofmt-flags: "-l -d"
+
+  fmt-fix:
+    name: gofmt fix
+    runs-on: ubuntu-latest
+    needs: golang-fmt
+    if: ${{ failure() }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: gofmt
+        uses: Jerome1337/gofmt-action@v1.0.5
+        with:
+          gofmt-path: "."
+          gofmt-flags: "-w"
+      - name: commit
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -am "gofmt fix"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
