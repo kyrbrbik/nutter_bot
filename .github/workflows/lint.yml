@@ -19,4 +19,3 @@ jobs:
         with:
           gofmt-path: "."
           gofmt-flags: "-l -d"
-          gofmt-output: "test"
