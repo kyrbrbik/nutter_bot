@@ -20,7 +20,7 @@ jobs:
           gofmt-path: "."
           gofmt-flags: "-l -d"
   golang-fix:
-    if: jobs.golang-fmt.if == 'failure'
+    if: ${{ jobs.golang-fmt.if == 'failure' }}
     name: gofmt-fix
     runs-on: ubuntu-latest
     steps:
