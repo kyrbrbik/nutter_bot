@@ -41,3 +41,27 @@ jobs:
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  mark_as_success:
+    runs-on: ubuntu-latest
+    needs: fmt-fix
+    if: ${{ success() }}
+    steps:
+      - name: mark as success
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.actions.createOrUpdateCheckRun({
+              name: 'gofmt',
+              status: 'completed',
+              conclusion: 'success',
+              completed_at: new Date().toISOString(),
+              output: {
+                title: 'gofmt',
+                summary: 'gofmt success',
+              },
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              check_run_id: context.payload.check_run.id
+            })
+            #what the hell even is this copilot
