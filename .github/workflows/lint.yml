@@ -22,6 +22,16 @@ jobs:
         continue-on-error: true
       - name: check failure
         if: ${{ failure() }}
+        env:
+          FAIL: ${{ job.status }}
+  fmt-fix:
+    name: gofmt fix
+    runs-on: ubuntu-latest
+    if: env.FAIL == 'failure' 
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: gofmt
         uses: Jerome1337/gofmt-action@v1.0.5
         with:
           gofmt-path: "."
