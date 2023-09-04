@@ -60,8 +60,7 @@ jobs:
                 title: 'gofmt',
                 summary: 'gofmt success',
               },
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              check_run_id: context.payload.check_run.id
+              repository: context.repo,
+              head_sha: context.sha,
             })
 #what the hell even is this copilot
