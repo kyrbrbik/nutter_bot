@@ -8,7 +8,7 @@ import (
 	"os"
 	"os/signal"
 	"strings"
-	"syscall"
+		"syscall"
 
 	"github.com/bwmarrin/discordgo"
 	openai "github.com/sashabaranov/go-openai"
