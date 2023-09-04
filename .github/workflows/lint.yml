@@ -15,7 +15,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: gofmt
-        uses: Jerome1337/golang-fmt@v1.0.5
+        uses: Jerome1337/gofmt-action@v1.0.5
         with:
           gofmt-path: "."
           gofmt-flags: "-l -d"
