@@ -19,8 +19,12 @@ jobs:
         with:
           gofmt-path: "."
           gofmt-flags: "-l -d"
+        continue-on-error: true
+      - name: Set status
+        run: echo "gofmt-status=$?" >> $GITHUB_ENV
   golang-fix:
-    if: ${{ failure() }}
+    needs: golang-fmt
+    if: ${{ job.golang-fmt.outputs.gofmt-status > 0 }}
     name: gofmt-fix
     runs-on: ubuntu-latest
     steps:
