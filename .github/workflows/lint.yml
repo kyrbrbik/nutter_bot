@@ -44,6 +44,7 @@ jobs:
   mark_as_success:
     runs-on: ubuntu-latest
     needs: fmt-fix
+    if: ${{ success(fmt-fix) }}
     steps:
       - name: mark as success
         uses: actions/github-script@v4
