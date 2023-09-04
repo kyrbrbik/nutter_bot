@@ -1,0 +1,21 @@
+name: golang-fmt
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  golang-fmt:
+    name: gofmt
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: gofmt
+        uses: Jerome1337/golang-fmt@v1.0.5
+        with:
+          gofmt-path: "."
+          gofmt-flags: "-l -d"
+          gofmt-output: "test"
