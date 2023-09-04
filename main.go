@@ -2,8 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
-
+		"fmt"
 	"log"
 	"math/rand"
 	"os"
