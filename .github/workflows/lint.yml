@@ -22,13 +22,11 @@ jobs:
         continue-on-error: true
       - name: check failure
         if: ${{ failure() }}
-        env:
-          FAIL: ${{ job.status }}
         run: exit 1
   fmt-fix:
     name: gofmt fix
     runs-on: ubuntu-latest
-    if: env.FAIL == 'failure' 
+    if: job.golang-fmt.outcome == 1
     steps:
       - name: checkout
         uses: actions/checkout@v3
