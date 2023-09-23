@@ -73,13 +73,16 @@ func main() {
 	session.AddHandler(messageCreate)
 
 	session.Identify.Intents = discordgo.IntentsGuildMessages
-
+	
 	err = session.Open()
 	if err != nil {
 		fmt.Println("error opening connection,", err)
 		return
 	}
 	log.Println("Bot started successfully.")
+
+	servers(session)
+	
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, os.Interrupt, syscall.SIGTERM, syscall.SIGINT, syscall.SIGKILL, syscall.SIGQUIT)
 	<-sc
@@ -91,14 +94,32 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 	if message.Author.ID == session.State.User.ID || message.Author.Bot {
 		return
 	}
+
+	if strings.Contains(strings.ToLower(message.Content), "nutter") { // this feels kinda hacky but works because of the wait condition
+		log.Printf("nutter mentioned")
+		session.ChannelMessageSend(message.ChannelID, api_call(message.Content))
+		return
+	}
+
 	if strings.HasPrefix(message.Content, "!") {
 		return
 	}
+
 	if dice_roll() == 1 {
 		return
 	}
+
 	if is_waiting == true {
 		return
 	}
+
 	session.ChannelMessageSend(message.ChannelID, api_call(message.Content))
 }
+
+func servers(s *discordgo.Session) { 
+	for _, guild := range s.State.Guilds {
+		log.Printf("Guild ID: %s", guild.ID)
+	}
+}
+
+
