@@ -95,13 +95,13 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 		return
 	}
 
-	if strings.Contains(strings.ToLower(message.Content), "nutter") { // this feels kinda hacky but works because of the wait condition
-		log.Printf("nutter mentioned")
-		session.ChannelMessageSend(message.ChannelID, api_call(message.Content))
+	if strings.HasPrefix(message.Content, "!") {
 		return
 	}
 
-	if strings.HasPrefix(message.Content, "!") {
+	if strings.Contains(strings.ToLower(message.Content), "nutter") { // this feels kinda hacky but works because of the wait condition
+		log.Printf("nutter mentioned")
+		session.ChannelMessageSend(message.ChannelID, api_call(message.Content))
 		return
 	}
 
