@@ -14,8 +14,18 @@ import (
 	openai "github.com/sashabaranov/go-openai"
 )
 
+type MessagePair struct {
+	Prompt   string
+	Response string
+}
+
+type Conversation struct {
+	History []MessagePair
+}
+
 var (
-	is_waiting bool = false
+	is_waiting    bool = false
+	conversations      = make(map[string]*Conversation)
 )
 
 func init() {
@@ -28,33 +38,62 @@ func dice_roll() int {
 	return roll
 }
 
-func api_call(prompt string) string {
-	role := "You are a discord moderator named Nutter that is sarcastic and ironic. You don't like your users. You also really like to use emojis."
+func api_call(prompt string, conversationID string) string {
 	token := os.Getenv("OPENAI_TOKEN")
 	client := openai.NewClient(token)
 	is_waiting = true
+
+	conv, exists := conversations[conversationID]
+	if !exists {
+		conv = &Conversation{}
+		conversations[conversationID] = conv
+	}
+
+	var resp string
+	if len(conv.getHistory()) > 0 {
+		resp = conv.getHistory()[len(conv.getHistory())-1].Response
+	} else {
+		resp = ""
+	}
+
+	conv.addMessagePair(prompt, resp)
+
+	conversation := conv.getHistory()
+	log.Println(conversation)
+	var messages []openai.ChatCompletionMessage
+
+	messages = append(messages, openai.ChatCompletionMessage{
+		Role:    openai.ChatMessageRoleSystem,
+		Content: "You are a discord moderator named Nutter that is sarcastic and ironic. You don't like your users. You also really like to use emojis.",
+	})
+
+	for _, pair := range conversation {
+		messages = append(messages, openai.ChatCompletionMessage{
+			Role:    openai.ChatMessageRoleUser,
+			Content: pair.Prompt,
+		})
+		messages = append(messages, openai.ChatCompletionMessage{
+			Role:    openai.ChatMessageRoleAssistant,
+			Content: pair.Response,
+		})
+	}
+	log.Println(messages)
+
 	response, err := client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
-			Model: openai.GPT4TurboPreview,
-			Messages: []openai.ChatCompletionMessage{
-				{
-					Role:    openai.ChatMessageRoleSystem,
-					Content: role,
-				},
-				{
-					Role:    openai.ChatMessageRoleUser,
-					Content: prompt,
-				},
-			},
+			Model:    openai.GPT4TurboPreview,
+			Messages: messages,
 		},
 	)
+
 	if err != nil {
-		fmt.Printf("ChatCompletion  error: %v\n", err)
-		return ""
+		log.Printf("Error: %s", err)
 	}
+
 	message := fmt.Sprintf("%v", response.Choices[0].Message.Content)
-	log.Printf("Message: %s", message)
+	//response := "some random shit"
+
 	is_waiting = false
 	return message
 }
@@ -91,6 +130,7 @@ func main() {
 }
 
 func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate) {
+
 	if message.Author.ID == session.State.User.ID || message.Author.Bot {
 		return
 	}
@@ -101,23 +141,31 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 
 	if strings.Contains(strings.ToLower(message.Content), "nutter") { // this feels kinda hacky but works because of the wait condition
 		log.Printf("nutter mentioned")
-		session.ChannelMessageSend(message.ChannelID, api_call(message.Content))
+		session.ChannelMessageSend(message.ChannelID, api_call(message.Content, message.ChannelID))
 		return
 	}
 
-	if dice_roll() == 1 {
-		return
-	}
+	//	if dice_roll() == 1 {
+	//		return
+	//	}
 
 	if is_waiting == true {
 		return
 	}
 
-	session.ChannelMessageSend(message.ChannelID, api_call(message.Content))
+	session.ChannelMessageSend(message.ChannelID, api_call(message.Content, message.ChannelID))
 }
 
 func servers(s *discordgo.Session) {
 	for _, guild := range s.State.Guilds {
 		log.Printf("Guild ID: %s", guild.ID)
 	}
+}
+
+func (c *Conversation) addMessagePair(prompt, response string) {
+	c.History = append(c.History, MessagePair{prompt, response})
+}
+
+func (c *Conversation) getHistory() []MessagePair {
+	return c.History
 }
