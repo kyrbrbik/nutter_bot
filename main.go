@@ -92,7 +92,6 @@ func api_call(prompt string, conversationID string) string {
 	}
 
 	message := fmt.Sprintf("%v", response.Choices[0].Message.Content)
-	//response := "some random shit"
 
 	is_waiting = false
 	return message
@@ -145,9 +144,9 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 		return
 	}
 
-	//	if dice_roll() == 1 {
-	//		return
-	//	}
+	if dice_roll() == 1 {
+		return
+	}
 
 	if is_waiting == true {
 		return
