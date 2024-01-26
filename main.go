@@ -51,15 +51,15 @@ func api_call(prompt string, conversationID string) string {
 
 	var resp string
 	if len(conv.getHistory()) > 0 {
+		log.Println("History exists")
 		resp = conv.getHistory()[len(conv.getHistory())-1].Response
 	} else {
+		log.Println("History does not exist")
 		resp = ""
 	}
-
 	conv.addMessagePair(prompt, resp)
 
 	conversation := conv.getHistory()
-	log.Println(conversation)
 	var messages []openai.ChatCompletionMessage
 
 	messages = append(messages, openai.ChatCompletionMessage{
@@ -77,7 +77,6 @@ func api_call(prompt string, conversationID string) string {
 			Content: pair.Response,
 		})
 	}
-	log.Println(messages)
 
 	response, err := client.CreateChatCompletion(
 		context.Background(),
@@ -92,6 +91,8 @@ func api_call(prompt string, conversationID string) string {
 	}
 
 	message := fmt.Sprintf("%v", response.Choices[0].Message.Content)
+	// this seems wrong but it works. too lazy for a proper fix
+	conv.addMessagePair(prompt, message)
 
 	is_waiting = false
 	return message
