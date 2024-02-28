@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 	openai "github.com/sashabaranov/go-openai"
@@ -99,6 +100,13 @@ func api_call(prompt string, conversationID string) string {
 }
 
 func main() {
+	ticker := time.NewTicker(5 * time.Minute)
+	go func() {
+		for range ticker.C {
+			clearHistory()
+		}
+	}()
+
 	token := os.Getenv("DISCORD_TOKEN")
 	if token == "" {
 		fmt.Println("No token provided. Please set DISCORD_TOKEN environment variable.")
@@ -168,4 +176,9 @@ func (c *Conversation) addMessagePair(prompt, response string) {
 
 func (c *Conversation) getHistory() []MessagePair {
 	return c.History
+}
+
+func clearHistory() {
+	conversations = make(map[string]*Conversation)
+	log.Println("Cleared conversation history")
 }
