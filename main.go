@@ -100,7 +100,7 @@ func api_call(prompt string, conversationID string) string {
 }
 
 func main() {
-	ticker := time.NewTicker(5 * time.Minute)
+	ticker := time.NewTicker(12 * time.Hour)
 	go func() {
 		for range ticker.C {
 			clearHistory()
